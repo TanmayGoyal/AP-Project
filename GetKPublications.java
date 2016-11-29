@@ -3,9 +3,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import java.util.*;
 
-/**
- *  The GetKPublications class.
- */
 public class GetKPublications extends DefaultHandler{
 	boolean bAuthor = false;
 	boolean bIgnore = false;
@@ -13,40 +10,76 @@ public class GetKPublications extends DefaultHandler{
 	HashMap<String,Integer> map = new HashMap<String,Integer>();
 	int k;
 	ArrayList<String> partAuthor;
-	int count = 0;
-
+	// int count = 0;
+	ArrayList<AuthorNames> authorEntities = new ArrayList<AuthorNames>();
 	ArrayList<String> authorAlias = new ArrayList<String>();
 
 	/**
    	* This is an constructor where map and key 
    	* values are set to instance variables.
    	*/
-	public GetKPublications(HashMap<String,Integer> map, int k) {//, ArrayList<AuthorNames> authorEntities) {
+	public GetKPublications(HashMap<String,Integer> map, int k, ArrayList<AuthorNames> authorEntities) {//, ArrayList<AuthorNames> authorEntities) {
 		this.map = map;
 		this.k = k;
-
+		this.authorEntities = authorEntities;
 		// searchForEntities(authorEntities);
 	}
 
+	///This methos will merge all the alias of one author in the map
+	public void mergeAliasMap() {
 
-	// public void searchForEntities(ArrayList<AuthorNames> authorEntities, String recAuthor) {
-	// 	// this.authorEntities = authorEntities;
+		for (AuthorNames x : authorEntities) {
+			int res = 0;
+			int i = 0;
+			String foo = null;
+			int flag = 0;
 
-	// 	for (AuthorNames a : authorEntities) {
-	// 		if (search(a.getAlias(), recAuthor)) {
-	// 			authorAlias = a.getAlias();
-	// 		}
-	// 	}
-	// }
+			for (String y : x.getAlias()) {
 
-	// public boolean search (ArrayList<String> arr, String str) {
-	// 	for (String x : arr) {
-	// 		if (x.equals(str))
-	// 			return true;
-	// 	}
+				if (map.get(y)!=null) {
+					// System.out.println("yo : " + map.get(y));
+					res += map.get(y);
+					map.remove(y);
 
-	// 	return false;
-	// }
+					if (i==0)
+						foo = y;
+					i++;
+				}
+				else {
+					flag = 1;
+				}
+				
+			}
+			if (flag != 1 && foo != null) {
+				// System.out.println("hi : " + foo + " " + res);
+				map.put(foo,res);
+			}
+
+
+		}
+
+		printMap();
+	}
+
+
+	public void searchForEntities(ArrayList<AuthorNames> authorEntities, String recAuthor) {
+		// this.authorEntities = authorEntities;
+
+		for (AuthorNames a : authorEntities) {
+			if (search(a.getAlias(), recAuthor)) {
+				authorAlias = a.getAlias();
+			}
+		}
+	}
+
+	public boolean search (ArrayList<String> arr, String str) {
+		for (String x : arr) {
+			if (x.equals(str))
+				return true;
+		}
+
+		return false;
+	}
 
 	///This is an overridden method from DefaultHandler which reads the starting tag of an element in the XML file.
 	@Override
@@ -87,20 +120,32 @@ public class GetKPublications extends DefaultHandler{
 		else if (qName.equalsIgnoreCase("www")) {
 			bIgnore = false;
 		}
+
+		else if (qName.equalsIgnoreCase("dblp")) {
+			mergeAliasMap();
+			
+		}
 	}
 
 	///This method returns a 2D array of type String with name of authors and the number of publications.
 	public String[][] getAuthors (int _k) {
+		int count = 0;
+		// System.out.println("hello from getAuthors : " + count);
+		System.out.println(_k);
 		for (String s : map.keySet()) {
+			// System.out.println("inside loop : " + map.get(s) + "  " + s);
 			if (map.get(s) > _k) {
 				count++;
 			}
 		}
+
+		// System.out.println("hello from getAuthors : " + count);
 		String[][] arr = new String[count][3];
 		int i = 0;
 
 		for (String s : map.keySet()) {
-			if (map.get(s) > _k) {
+			// searchForEntities(authorEntities, s);
+			if (map.get(s) /*totalAuthorAlias()*/ > _k) {
 				// searchForEntities(s);
 				arr[i][0] = Integer.toString(i+1);
 				arr[i][1] = s;
@@ -112,14 +157,32 @@ public class GetKPublications extends DefaultHandler{
 
 		return arr;
 	}
+	///This method returns sum of all publications by author alias
+	public int totalAuthorAlias() {
+		int result = 0;
+		for (String x : authorAlias)
+			result+=map.get(x);
+
+		return result;
+	}
 
 	///This method returns a counter value.
-	public int getCount() {
-		return count;
-	}
+	// public int getCount() {
+	// 	return count;
+	// }
 
 	///This method returns an ArrayList<String>.
 	public ArrayList<String> getAuthorAlias() {
 		return authorAlias;
+	}
+
+	///This methos prints map
+	public void printMap() {
+		for (String name : map.keySet()){
+
+            String key = name.toString();
+            String value = map.get(name).toString();  
+            System.out.println(key + " " + value);  
+        }
 	}
 }
