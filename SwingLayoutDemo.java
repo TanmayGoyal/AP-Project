@@ -45,6 +45,14 @@ public class SwingLayoutDemo {
 
    private String fileName = "input1.xml";
 
+   /**
+   * This is the constructor for the initial parsing and the GUI interface.
+   * The XML file gets parsed two times before the GUI is created. This is to
+   * get the required data for both queries. The GUI is created in different
+   * methods and later added in the constructor one by one and finally the frame is 
+   * made visible.
+   *
+   */
    public SwingLayoutDemo(){
       System.out.println("Please wait while loading...");
 
@@ -124,6 +132,7 @@ public class SwingLayoutDemo {
       mainFrame.setVisible(true);  
    }
 
+   ///This method creates the mainFrame and the controlPanel.
    public void prepareGUI() {
       mainFrame = new JFrame("DBLP Query Engine");
       mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -192,7 +201,10 @@ public class SwingLayoutDemo {
 
       constraints = new GridBagConstraints(); 
    }
+   /**< It creates the outer container for the inner panels 
+   * that is added later in different methods.*/
 
+   ///This method creates the panel for Query 1.
    public void panelQuery1() {
       query1Panel = new JPanel(new GridLayout(7, 1));
       JPanel query11Panel = new JPanel(new FlowLayout());
@@ -256,8 +268,6 @@ public class SwingLayoutDemo {
          public void actionPerformed(ActionEvent e) {
 
             String searchType = (String)comboBox.getSelectedItem();
-
-            
 
             if (searchType.equals("By Author Name")) {
                if (yearSortButton.isSelected()) {
@@ -340,7 +350,12 @@ public class SwingLayoutDemo {
       query1Panel.add(query16Panel);
       query1Panel.add(query15Panel);//end query1 panels.
    }
+   /**< It creates a combo box for the search by Author
+   * and Title Tag. It then creates the respective panels
+   * for the fields name, sinceYear, rangeYear and sort by 
+   * type respectively. */
 
+   ///This method creates the panel for Query 2.
    public void panelQuery2() {
       query2Panel = new JPanel(new GridLayout(5, 1));
 
@@ -385,7 +400,10 @@ public class SwingLayoutDemo {
       query2Panel.add(query21Panel);
       query2Panel.add(query22Panel);//end query2 panels.
    }
+   /**< It creates a field for receiving the number of 
+   * publications.*/
 
+   ///This method creates the panel for Query 3.
    public void panelQuery3() {
       query3Panel = new JPanel(new GridLayout(7, 1));
       JPanel query31Panel = new JPanel(new FlowLayout());
@@ -445,10 +463,13 @@ public class SwingLayoutDemo {
       query3Panel.add(query34Panel);
       query3Panel.add(query35Panel);
       query3Panel.add(query36Panel);
-      query3Panel.add(query37Panel);//end query3 panels.
-  
+      query3Panel.add(query37Panel);//end query3 panels.  
    }
+   /**< It creates a year field and fields for five authors 
+   * so that a prediction can be made for the authors papers
+   * in the following year. */
 
+   ///This method creates the main combo box that is used to select queries.
    public void panelComboBox() {
       final DefaultComboBoxModel<String> panelName = new DefaultComboBoxModel<String>();
 
@@ -479,9 +500,11 @@ public class SwingLayoutDemo {
             statusLabel.setText(data);
          }
       }); 
-
    }
+   /**< It creates a comboBox with a scroll so that a query 
+   * can be selected when the "show" button is pressed.*/
 
+   ///This method creates the Table which displays the results of the queries.
    public void panelResultTable() {
       getStartTable();
       table.setRowHeight(26);
@@ -519,8 +542,10 @@ public class SwingLayoutDemo {
       buttonPanel.add(next);
       tablePanel.add(buttonPanel, BorderLayout.SOUTH);
       tablePanel.add(scrollPane, BorderLayout.CENTER);
-
    }
+   /**< A table is created along with two buttons "Prev" and
+   * "Next" which help navigating through the results that get
+   * displayed on the table.*/ 
 
    // private void getQ1StartTable() {
    //    String[] colNames = new String[] {"SNo", "Authors", "Title", "Pages", "Year", "Volume", "Journal", "url"};
@@ -529,6 +554,7 @@ public class SwingLayoutDemo {
    //    table.setModel(dtm);
    // }
 
+   ///This method creates a new Table on reset.
    private void getStartTableNew() {
       String[] colNames =  new String[] {"Welcome"};
       String[][] arr = new String [20][1];
@@ -536,18 +562,21 @@ public class SwingLayoutDemo {
       table.setModel(dtm);
    }
 
+   ///This method creates a new Table which matches the output of Query 2.
    private void getQ2Table() {
         String[] colNames = new String[] {"SNo","Author", "Number of Publications"};
         DefaultTableModel dtm = new DefaultTableModel(map, colNames);
         table.setModel(dtm);
    }
 
+   ///This method creates a new Table which matches the output of Query 1 (By Author Name).
    private void getQ1Table(String[][] arr) { //SNO, AUTHORS, TITLE, PAGES, YEAR, VOLUME, JOURNAL, URL
         String[] colNames = new String[] {"SNo", "Authors", "Title", "Pages", "Year", "Volume", "Journal", "url"};
         DefaultTableModel dtm = new DefaultTableModel(arr, colNames);
         table.setModel(dtm);
    }
 
+   ///This method creates a new Table which matches the output of Query 1 (By Title Tag).
    private void getQ1RelevanceTable(String[][] arr) { //SNO, AUTHORS, TITLE, PAGES, YEAR, VOLUME, JOURNAL, URL, RELEVANCE
 
       // System.out.println(arr[0][8]);
@@ -556,12 +585,14 @@ public class SwingLayoutDemo {
         table.setModel(dtm);
    }
 
+   ///This method creates a new Table on startup.
    private void getStartTable() {
         String[] colNames =  new String[] {"Welcome"};
         String[][] startArr = new String [20][1];
         table = new JTable(startArr,colNames);
    }
 
+   ///This method returns the SAXParser so that it can be used to parse the input XML file.
    public SAXParser getSAXParser() {
       try {
 
@@ -586,6 +617,7 @@ public class SwingLayoutDemo {
       return saxParser;
    }
 
+   ///This method retrieves the authors with more than <k> publications.
    public void getKPublications(int k) {
       try {
          SAXParser saxParser = getSAXParser();
@@ -612,6 +644,7 @@ public class SwingLayoutDemo {
       }
    }
 
+   ///This method parses the XML file a second time so that an authors publications can be returned.
    public GetKPublications parseAgain(GetKPublications publ) {
       try {
          File inputFile = new File(fileName);
@@ -638,6 +671,7 @@ public class SwingLayoutDemo {
         }
    }
 
+   ///This method displays the results of Query 1 (By Author Name) from a particular year. (Year Sorted)
    public void getAuthorYearSorted(String name, String year) {
       try {
          int foo = Integer.parseInt(year);
@@ -659,6 +693,7 @@ public class SwingLayoutDemo {
       }
    }
 
+   ///This method displays the results of Query 1 (By Author Name) for a given range of years. (Year Sorted)
    public void getAuthorYearSorted (String name, String startYear, String endYear) {
       try {
          int foo = Integer.parseInt(startYear);
@@ -687,6 +722,7 @@ public class SwingLayoutDemo {
       }
    }
 
+   ///This method displays the results of Query 1 (By Title Tag) from a particular year. (Year Sorted)
    public void getTitleYearSorted(String name, String year) {
       try {
          int foo = Integer.parseInt(year);
@@ -708,6 +744,7 @@ public class SwingLayoutDemo {
       }
    }
 
+   ///This method displays the results of Query 1 (By Title Tag) for a given range of years. (Year Sorted)
    public void getTitleYearSorted (String name, String startYear, String endYear) {
       try {
          int foo = Integer.parseInt(startYear);
@@ -735,6 +772,7 @@ public class SwingLayoutDemo {
       }
    }
 
+   ///This method displays the results of Query 1 (By Title Tag) for a given range of years. (Relevance Sorted)
    public void getTitleYearRelevance(String name, String year) {
 
       try {
@@ -758,6 +796,7 @@ public class SwingLayoutDemo {
       }
    }
 
+   ///This method displays the results of Query 1 (By Title Tag) for a given range of years. (Relevance Sorted)
    public void getTitleYearRelevance(String name, String startYear, String endYear) {
 
 
