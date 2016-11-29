@@ -12,10 +12,33 @@ public class GetKPublications extends DefaultHandler{
 	ArrayList<String> partAuthor;
 	int count = 0;
 
-	public GetKPublications(HashMap<String,Integer> map, int k) {
+	ArrayList<String> authorAlias = new ArrayList<String>();
+
+	public GetKPublications(HashMap<String,Integer> map, int k) {//, ArrayList<AuthorNames> authorEntities) {
 		this.map = map;
 		this.k = k;
+
+		// searchForEntities(authorEntities);
 	}
+
+	// public void searchForEntities(ArrayList<AuthorNames> authorEntities, String recAuthor) {
+	// 	// this.authorEntities = authorEntities;
+
+	// 	for (AuthorNames a : authorEntities) {
+	// 		if (search(a.getAlias(), recAuthor)) {
+	// 			authorAlias = a.getAlias();
+	// 		}
+	// 	}
+	// }
+
+	// public boolean search (ArrayList<String> arr, String str) {
+	// 	for (String x : arr) {
+	// 		if (x.equals(str))
+	// 			return true;
+	// 	}
+
+	// 	return false;
+	// }
 
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		if (qName.equalsIgnoreCase("author")) {
@@ -61,6 +84,7 @@ public class GetKPublications extends DefaultHandler{
 
 		for (String s : map.keySet()) {
 			if (map.get(s) > _k) {
+				// searchForEntities(s);
 				arr[i][0] = Integer.toString(i+1);
 				arr[i][1] = s;
 				arr[i][2] = Integer.toString(map.get(s));
@@ -72,7 +96,12 @@ public class GetKPublications extends DefaultHandler{
 		return arr;
 	}
 
+
 	public int getCount() {
 		return count;
+	}
+
+	public ArrayList<String> getAuthorAlias() {
+		return authorAlias;
 	}
 }

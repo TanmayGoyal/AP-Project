@@ -48,8 +48,6 @@ public class SwingLayoutDemo {
    public SwingLayoutDemo(){
       System.out.println("Please wait while loading...");
 
-      getKPublications(0);
-      System.out.println("almost done :)");
       ParseEntityResolution per = new ParseEntityResolution();
       SAXParser saxParser = getSAXParser();
 
@@ -60,8 +58,12 @@ public class SwingLayoutDemo {
          e.printStackTrace();
       }
 
+
       authorEntities = per.getEntityAuthors();
 
+     
+      System.out.println("almost done :)");
+      getKPublications(0);
       System.out.println("...thank you :)");
 
       prepareGUI();
@@ -272,9 +274,13 @@ public class SwingLayoutDemo {
                else if (relevanceSortButton.isSelected()) {
                   if (!(sinceYearField.getText().equals("")) && customStartRangeField.getText().equals("") && customEndRangeField.getText().equals("")) {
                      //SINCE YEAR
+                     getAuthorYearSorted(nameField.getText(), sinceYearField.getText());
+
                   }
                   else if (sinceYearField.getText().equals("") && !(customStartRangeField.getText().equals("")) && !(customEndRangeField.getText().equals(""))) {
                      //RANGE
+                     getAuthorYearSorted(nameField.getText(), customStartRangeField.getText(), customEndRangeField.getText());
+
                   }
                   else {
                      JOptionPane.showMessageDialog(null, "Please enter a valid format.", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -297,9 +303,11 @@ public class SwingLayoutDemo {
                else if (relevanceSortButton.isSelected()) {
                   if (!(sinceYearField.getText().equals("")) && customStartRangeField.getText().equals("") && customEndRangeField.getText().equals("")) {
                      //SINCE YEAR
+                     getTitleYearRelevance(nameField.getText(), sinceYearField.getText());
                   }
                   else if (sinceYearField.getText().equals("") && !(customStartRangeField.getText().equals("")) && !(customEndRangeField.getText().equals(""))) {
                      //RANGE
+                     getTitleYearRelevance(nameField.getText(), customStartRangeField.getText(), customEndRangeField.getText());
                   }
                   else {
                      JOptionPane.showMessageDialog(null, "Please enter a valid format.", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -320,6 +328,7 @@ public class SwingLayoutDemo {
             customStartRangeField.setText("");
             customEndRangeField.setText("");
             bg.clearSelection();
+            getStartTableNew();
          }
       });
       query15Panel.add(reset1Button);//Row 6
@@ -368,6 +377,7 @@ public class SwingLayoutDemo {
          @Override
          public void actionPerformed(ActionEvent e) {
             publicationsField.setText("");
+            getStartTableNew();
          }
       });
       query22Panel.add(reset2Button);//Row 2
@@ -461,6 +471,9 @@ public class SwingLayoutDemo {
             String data = "";
             if (listCombo.getSelectedIndex() != -1) {  
                CardLayout cardLayout = (CardLayout)(panel.getLayout());
+
+               if(listCombo.getSelectedIndex() == 1 || listCombo.getSelectedIndex() == 2)
+                  getStartTableNew();
                cardLayout.show(panel, listCombo.getItemAt(listCombo.getSelectedIndex()));                
             }              
             statusLabel.setText(data);
@@ -509,6 +522,20 @@ public class SwingLayoutDemo {
 
    }
 
+   // private void getQ1StartTable() {
+   //    String[] colNames = new String[] {"SNo", "Authors", "Title", "Pages", "Year", "Volume", "Journal", "url"};
+   //    String[][] arr = new String[21][8];
+   //    DefaultTableModel dtm = new DefaultTableModel(arr, colNames);
+   //    table.setModel(dtm);
+   // }
+
+   private void getStartTableNew() {
+      String[] colNames =  new String[] {"Welcome"};
+      String[][] arr = new String [20][1];
+      DefaultTableModel dtm = new DefaultTableModel(arr, colNames);
+      table.setModel(dtm);
+   }
+
    private void getQ2Table() {
         String[] colNames = new String[] {"SNo","Author", "Number of Publications"};
         DefaultTableModel dtm = new DefaultTableModel(map, colNames);
@@ -521,8 +548,16 @@ public class SwingLayoutDemo {
         table.setModel(dtm);
    }
 
+   private void getQ1RelevanceTable(String[][] arr) { //SNO, AUTHORS, TITLE, PAGES, YEAR, VOLUME, JOURNAL, URL, RELEVANCE
+
+      // System.out.println(arr[0][8]);
+        String[] colNames = new String[] {"SNo", "Authors", "Title", "Pages", "Year", "Volume", "Journal", "url", "Relevance"};
+        DefaultTableModel dtm = new DefaultTableModel(arr, colNames);
+        table.setModel(dtm);
+   }
+
    private void getStartTable() {
-        String[] colNames =  new String[] {"WELCOME"};
+        String[] colNames =  new String[] {"Welcome"};
         String[][] startArr = new String [20][1];
         table = new JTable(startArr,colNames);
    }
@@ -687,6 +722,57 @@ public class SwingLayoutDemo {
          saxParser.parse(is, publ);
 
          getQ1Table(publ.getArray());
+
+         // publ.printData();
+      }
+      catch (NumberFormatException num) {
+         JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
+      }
+      catch (Exception e) {
+         JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
+
+         // e.printStackTrace();
+      }
+   }
+
+   public void getTitleYearRelevance(String name, String year) {
+
+      try {
+         int foo = Integer.parseInt(year);
+         SAXParser saxParser = getSAXParser();
+
+         SearchTitleRelevance publ = new SearchTitleRelevance(name, year, authorEntities);
+
+         saxParser.parse(is, publ);
+
+         getQ1RelevanceTable(publ.getArray());
+
+         // publ.printData();
+      }
+      catch (NumberFormatException num) {
+         JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
+      }
+      catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+
+   public void getTitleYearRelevance(String name, String startYear, String endYear) {
+
+
+      try {
+         int foo = Integer.parseInt(startYear);
+         int bar = Integer.parseInt(endYear);
+         if (foo >= bar)
+            throw new Exception();
+
+         SAXParser saxParser = getSAXParser();
+
+         SearchTitleRelevance publ = new SearchTitleRelevance(name, startYear, endYear, authorEntities);
+
+         saxParser.parse(is, publ);
+
+         getQ1RelevanceTable(publ.getArray());
 
          // publ.printData();
       }
