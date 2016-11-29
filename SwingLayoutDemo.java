@@ -38,7 +38,11 @@ public class SwingLayoutDemo {
    private int q2Count;
    private static JTable table;
 
+   private String fileName = "input.xml";
+
    public SwingLayoutDemo(){
+      
+
       prepareGUI();
 
       //Query 1 Panel*****************************************
@@ -164,7 +168,6 @@ public class SwingLayoutDemo {
       noQueryPanel = new JPanel();
 
       constraints = new GridBagConstraints(); 
-
    }
 
    public void panelQuery1() {
@@ -229,6 +232,57 @@ public class SwingLayoutDemo {
          @Override
          public void actionPerformed(ActionEvent e) {
 
+            String searchType = (String)comboBox.getSelectedItem();
+
+            if (searchType.equals("By Author Name")) {
+               if (yearSortButton.isSelected()) {
+                  if (!(sinceYearField.getText().equals("")) && customStartRangeField.getText().equals("") && customEndRangeField.getText().equals("")) {
+                     getAuthorYearSorted(nameField.getText(), sinceYearField.getText());
+                  }
+                  else if (sinceYearField.getText().equals("") && !(customStartRangeField.getText().equals("")) && !(customEndRangeField.getText().equals(""))) {
+                     getAuthorYearSorted(nameField.getText(), customStartRangeField.getText(), customEndRangeField.getText());
+                  }
+                  else {
+                     JOptionPane.showMessageDialog(null, "Please enter a valid format.", "Warning", JOptionPane.WARNING_MESSAGE);
+                  }
+               }
+               else if (relevanceSortButton.isSelected()) {
+                  if (!(sinceYearField.getText().equals("")) && customStartRangeField.getText().equals("") && customEndRangeField.getText().equals("")) {
+                     //SINCE YEAR
+                  }
+                  else if (sinceYearField.getText().equals("") && !(customStartRangeField.getText().equals("")) && !(customEndRangeField.getText().equals(""))) {
+                     //RANGE
+                  }
+                  else {
+                     JOptionPane.showMessageDialog(null, "Please enter a valid format.", "Warning", JOptionPane.WARNING_MESSAGE);
+                  }
+               }
+
+            }
+            else if (searchType.equals("By Title Tag")) {
+               if (yearSortButton.isSelected()) {
+                  if (!(sinceYearField.getText().equals("")) && customStartRangeField.getText().equals("") && customEndRangeField.getText().equals("")) {
+                     getTitleYearSorted(nameField.getText(), sinceYearField.getText());
+                  }
+                  else if (sinceYearField.getText().equals("") && !(customStartRangeField.getText().equals("")) && !(customEndRangeField.getText().equals(""))) {
+                     getTitleYearSorted(nameField.getText(), customStartRangeField.getText(), customEndRangeField.getText());
+                  }
+                  else {
+                     JOptionPane.showMessageDialog(null, "Please enter a valid format.", "Warning", JOptionPane.WARNING_MESSAGE);
+                  }
+               }
+               else if (relevanceSortButton.isSelected()) {
+                  if (!(sinceYearField.getText().equals("")) && customStartRangeField.getText().equals("") && customEndRangeField.getText().equals("")) {
+                     //SINCE YEAR
+                  }
+                  else if (sinceYearField.getText().equals("") && !(customStartRangeField.getText().equals("")) && !(customEndRangeField.getText().equals(""))) {
+                     //RANGE
+                  }
+                  else {
+                     JOptionPane.showMessageDialog(null, "Please enter a valid format.", "Warning", JOptionPane.WARNING_MESSAGE);
+                  }
+               }
+            }
 
          }
       });
@@ -253,7 +307,6 @@ public class SwingLayoutDemo {
       query1Panel.add(query14Panel);
       query1Panel.add(query16Panel);
       query1Panel.add(query15Panel);//end query1 panels.
-   
    }
 
    public void panelQuery2() {
@@ -276,7 +329,8 @@ public class SwingLayoutDemo {
                //    JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Title", JOptionPane.WARNING_MESSAGE);
                // }
                getKPublications(Integer.parseInt(publicationsField.getText()));
-               getTable();
+
+               getQ2Table();
             } catch (NumberFormatException num) {
                JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
             }
@@ -432,9 +486,15 @@ public class SwingLayoutDemo {
 
    }
 
-   private void getTable() {
+   private void getQ2Table() {
         String[] colNames = new String[] {"Author", "Number of Publications"};
         DefaultTableModel dtm = new DefaultTableModel(map, colNames);
+        table.setModel(dtm);
+   }
+
+   private void getQ1Table(String[][] arr) { //SNO, AUTHORS, TITLE, PAGES, YEAR, VOLUME, JOURNAL, URL
+        String[] colNames = new String[] {"SNo", "Authors", "Title", "Pages", "Year", "Volume", "Journal", "url"};
+        DefaultTableModel dtm = new DefaultTableModel(arr, colNames);
         table.setModel(dtm);
    }
 
@@ -449,7 +509,7 @@ public class SwingLayoutDemo {
       try {
 
 
-         File inputFile = new File("input.xml");
+         File inputFile = new File(fileName);
          InputStream inputStream = new FileInputStream(inputFile);
          Reader reader = new InputStreamReader(inputStream);
          is = new InputSource(reader);
@@ -484,7 +544,7 @@ public class SwingLayoutDemo {
          System.out.println("second");
          xyz = parseAgain(xyz);
 
-         map = xyz.getAuthors();
+         map = xyz.getAuthors(k);
 
          
 
@@ -497,7 +557,7 @@ public class SwingLayoutDemo {
 
    public GetKPublications parseAgain(GetKPublications publ) {
       try {
-         File inputFile = new File("input.xml");
+         File inputFile = new File(fileName);
          InputStream inputStream = new FileInputStream(inputFile);
          Reader reader = new InputStreamReader(inputStream);
          InputSource is = new InputSource(reader);
@@ -520,4 +580,94 @@ public class SwingLayoutDemo {
 
         }
    }
+
+   public void getAuthorYearSorted(String name, String year) {
+      try {
+         int foo = Integer.parseInt(year);
+         SAXParser saxParser = getSAXParser();
+
+         SearchAuthorPublication publ = new SearchAuthorPublication(name, year);
+
+         saxParser.parse(is, publ);
+
+         getQ1Table(publ.getArray());
+
+         publ.printData();
+      }
+      catch (NumberFormatException num) {
+         JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
+      }
+      catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+
+   public void getAuthorYearSorted (String name, String startYear, String endYear) {
+      try {
+         int foo = Integer.parseInt(startYear);
+         int bar = Integer.parseInt(endYear);
+
+         SAXParser saxParser = getSAXParser();
+
+         SearchAuthorPublication publ = new SearchAuthorPublication(name, startYear, endYear);
+
+         saxParser.parse(is, publ);
+
+         getQ1Table(publ.getArray());
+
+         publ.printData();
+      }
+      catch (NumberFormatException num) {
+         JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
+      }
+      catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+
+   public void getTitleYearSorted(String name, String year) {
+      try {
+         int foo = Integer.parseInt(year);
+         SAXParser saxParser = getSAXParser();
+
+         SearchTitlePublications publ = new SearchTitlePublications(name, year);
+
+         saxParser.parse(is, publ);
+
+         getQ1Table(publ.getArray());
+
+         // publ.printData();
+      }
+      catch (NumberFormatException num) {
+         JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
+      }
+      catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+
+   public void getTitleYearSorted (String name, String startYear, String endYear) {
+      try {
+         int foo = Integer.parseInt(startYear);
+         int bar = Integer.parseInt(endYear);
+
+         SAXParser saxParser = getSAXParser();
+
+         SearchTitlePublications publ = new SearchTitlePublications(name, startYear, endYear);
+
+         saxParser.parse(is, publ);
+
+         getQ1Table(publ.getArray());
+
+         // publ.printData();
+      }
+      catch (NumberFormatException num) {
+         JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
+      }
+      catch (Exception e) {
+         e.printStackTrace();
+      }
+   }
+
+
 }

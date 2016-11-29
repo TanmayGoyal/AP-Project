@@ -5,6 +5,7 @@ import java.util.*;
 
 public class GetKPublications extends DefaultHandler{
 	boolean bAuthor = false;
+	boolean bIgnore = false;
 
 	HashMap<String,Integer> map = new HashMap<String,Integer>();
 	int k;
@@ -21,6 +22,9 @@ public class GetKPublications extends DefaultHandler{
 			bAuthor = true;
 			partAuthor = new ArrayList<String>();
 		}
+		else if (qName.equalsIgnoreCase("www")) {
+			bIgnore = true;
+		}
 	}
 
 	public void characters(char ch[], int start, int length) throws SAXException {
@@ -30,7 +34,7 @@ public class GetKPublications extends DefaultHandler{
 	}
 
 	public void endElement(String uri, String localName, String qName) throws SAXException {
-		if (qName.equalsIgnoreCase("author")) {
+		if (qName.equalsIgnoreCase("author") && bIgnore == false) {
 			StringBuilder listString = new StringBuilder();
 
 			for (String s : partAuthor)
@@ -41,11 +45,14 @@ public class GetKPublications extends DefaultHandler{
 			// System.out.println("hi : " + listString.toString());
 			map.put(listString.toString(), map.get(listString.toString()) + 1);
 		}
+		else if (qName.equalsIgnoreCase("www")) {
+			bIgnore = false;
+		}
 	}
 
-	public String[][] getAuthors () {
+	public String[][] getAuthors (int _k) {
 		for (String s : map.keySet()) {
-			if (map.get(s) > k) {
+			if (map.get(s) > _k) {
 				count++;
 			}
 		}
@@ -53,7 +60,7 @@ public class GetKPublications extends DefaultHandler{
 		int i = 0;
 
 		for (String s : map.keySet()) {
-			if (map.get(s) > k) {
+			if (map.get(s) > _k) {
 				arr[i][0] = s;
 				arr[i][1] = Integer.toString(map.get(s));
 				// System.out.println(s + "  " + map.get(s));
