@@ -56,13 +56,14 @@ public class GetKPublications extends DefaultHandler{
 				count++;
 			}
 		}
-		String[][] arr = new String[count][2];
+		String[][] arr = new String[count][3];
 		int i = 0;
 
 		for (String s : map.keySet()) {
 			if (map.get(s) > _k) {
-				arr[i][0] = s;
-				arr[i][1] = Integer.toString(map.get(s));
+				arr[i][0] = Integer.toString(i+1);
+				arr[i][1] = s;
+				arr[i][2] = Integer.toString(map.get(s));
 				// System.out.println(s + "  " + map.get(s));
 				i++;	
 			}

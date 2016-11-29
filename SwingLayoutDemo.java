@@ -38,10 +38,31 @@ public class SwingLayoutDemo {
    private int q2Count;
    private static JTable table;
 
-   private String fileName = "input.xml";
+   private ArrayList<AuthorNames> authorEntities = new ArrayList<AuthorNames>();
+
+
+   GetKPublications kPublications;// = new GetKPublications(hashMap,k);
+
+   private String fileName = "input1.xml";
 
    public SwingLayoutDemo(){
-      
+      System.out.println("Please wait while loading...");
+
+      getKPublications(0);
+      System.out.println("almost done :)");
+      ParseEntityResolution per = new ParseEntityResolution();
+      SAXParser saxParser = getSAXParser();
+
+      try {
+         saxParser.parse(is,per);
+      }
+      catch(Exception e) {
+         e.printStackTrace();
+      }
+
+      authorEntities = per.getEntityAuthors();
+
+      System.out.println("...thank you :)");
 
       prepareGUI();
 
@@ -234,6 +255,8 @@ public class SwingLayoutDemo {
 
             String searchType = (String)comboBox.getSelectedItem();
 
+            
+
             if (searchType.equals("By Author Name")) {
                if (yearSortButton.isSelected()) {
                   if (!(sinceYearField.getText().equals("")) && customStartRangeField.getText().equals("") && customEndRangeField.getText().equals("")) {
@@ -311,6 +334,7 @@ public class SwingLayoutDemo {
 
    public void panelQuery2() {
       query2Panel = new JPanel(new GridLayout(5, 1));
+
       JPanel query21Panel = new JPanel(new FlowLayout());
       JPanel query22Panel = new JPanel(new FlowLayout());
 
@@ -328,8 +352,8 @@ public class SwingLayoutDemo {
                // if(publicationsField.getText() != null && publicationsField.getText().equals("")){
                //    JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Title", JOptionPane.WARNING_MESSAGE);
                // }
-               getKPublications(Integer.parseInt(publicationsField.getText()));
-
+               
+               map = kPublications.getAuthors(Integer.parseInt(publicationsField.getText()));
                getQ2Table();
             } catch (NumberFormatException num) {
                JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -350,7 +374,6 @@ public class SwingLayoutDemo {
 
       query2Panel.add(query21Panel);
       query2Panel.add(query22Panel);//end query2 panels.
-
    }
 
    public void panelQuery3() {
@@ -487,7 +510,7 @@ public class SwingLayoutDemo {
    }
 
    private void getQ2Table() {
-        String[] colNames = new String[] {"Author", "Number of Publications"};
+        String[] colNames = new String[] {"SNo","Author", "Number of Publications"};
         DefaultTableModel dtm = new DefaultTableModel(map, colNames);
         table.setModel(dtm);
    }
@@ -499,10 +522,9 @@ public class SwingLayoutDemo {
    }
 
    private void getStartTable() {
-        String[] colNames =  new String[] {"", ""};
-        String[][] startArr = new String [20][2];
+        String[] colNames =  new String[] {"WELCOME"};
+        String[][] startArr = new String [20][1];
         table = new JTable(startArr,colNames);
-
    }
 
    public SAXParser getSAXParser() {
@@ -538,13 +560,13 @@ public class SwingLayoutDemo {
 
          HashMap<String,Integer> hashMap = publ.getHashMap();
 
-         GetKPublications xyz = new GetKPublications(hashMap,k);
-         q2Count = xyz.getCount();
+         kPublications = new GetKPublications(hashMap,k);
+         q2Count = kPublications.getCount();
 
          System.out.println("second");
-         xyz = parseAgain(xyz);
+         kPublications = parseAgain(kPublications);
 
-         map = xyz.getAuthors(k);
+         map = kPublications.getAuthors(k);
 
          
 
@@ -586,7 +608,7 @@ public class SwingLayoutDemo {
          int foo = Integer.parseInt(year);
          SAXParser saxParser = getSAXParser();
 
-         SearchAuthorPublication publ = new SearchAuthorPublication(name, year);
+         SearchAuthorPublication publ = new SearchAuthorPublication(name, year, authorEntities);
 
          saxParser.parse(is, publ);
 
@@ -607,9 +629,12 @@ public class SwingLayoutDemo {
          int foo = Integer.parseInt(startYear);
          int bar = Integer.parseInt(endYear);
 
+         if (foo >= bar)
+            throw new Exception();
+
          SAXParser saxParser = getSAXParser();
 
-         SearchAuthorPublication publ = new SearchAuthorPublication(name, startYear, endYear);
+         SearchAuthorPublication publ = new SearchAuthorPublication(name, startYear, endYear, authorEntities);
 
          saxParser.parse(is, publ);
 
@@ -621,7 +646,9 @@ public class SwingLayoutDemo {
          JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
       }
       catch (Exception e) {
-         e.printStackTrace();
+         JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
+
+         // e.printStackTrace();
       }
    }
 
@@ -630,7 +657,7 @@ public class SwingLayoutDemo {
          int foo = Integer.parseInt(year);
          SAXParser saxParser = getSAXParser();
 
-         SearchTitlePublications publ = new SearchTitlePublications(name, year);
+         SearchTitlePublications publ = new SearchTitlePublications(name, year, authorEntities);
 
          saxParser.parse(is, publ);
 
@@ -650,10 +677,12 @@ public class SwingLayoutDemo {
       try {
          int foo = Integer.parseInt(startYear);
          int bar = Integer.parseInt(endYear);
+         if (foo >= bar)
+            throw new Exception();
 
          SAXParser saxParser = getSAXParser();
 
-         SearchTitlePublications publ = new SearchTitlePublications(name, startYear, endYear);
+         SearchTitlePublications publ = new SearchTitlePublications(name, startYear, endYear, authorEntities);
 
          saxParser.parse(is, publ);
 
@@ -665,7 +694,9 @@ public class SwingLayoutDemo {
          JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
       }
       catch (Exception e) {
-         e.printStackTrace();
+         JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
+
+         // e.printStackTrace();
       }
    }
 

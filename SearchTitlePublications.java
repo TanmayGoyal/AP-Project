@@ -32,14 +32,14 @@ public class SearchTitlePublications extends DefaultHandler{
 	ArrayList<String> partTitle;
 	Query1DisplayStructure q1Object;
 
-	public SearchTitlePublications (String title, String year) {
+	public SearchTitlePublications (String title, String year, ArrayList<AuthorNames> authorEntities) {
 		recTitle = title;
 		recYear = Integer.parseInt(year);
 
 		bSince = true;
 	}
 
-	public SearchTitlePublications (String title, String startYear, String endYear) {
+	public SearchTitlePublications (String title, String startYear, String endYear, ArrayList<AuthorNames> authorEntities) {
 		
 		recTitle = title;
 		recStartYear = Integer.parseInt(startYear);

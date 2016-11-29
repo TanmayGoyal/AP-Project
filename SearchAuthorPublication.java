@@ -34,23 +34,48 @@ public class SearchAuthorPublication extends DefaultHandler {
 	ArrayList<String> partTitle;
 	Query1DisplayStructure q1Object;
 
-	public SearchAuthorPublication (String author, String year) {
+	ArrayList<String> authorAlias = new ArrayList<String>();
+	ArrayList<AuthorNames> authorEntities = new ArrayList<AuthorNames>();
+
+	public SearchAuthorPublication (String author, String year, ArrayList<AuthorNames> authorEntities) {
 		recAuthor = author;
 		recYear = Integer.parseInt(year);
 
 		bSince = true;
+
+		searchForEntities(authorEntities);
 	}
 
-	public SearchAuthorPublication (String author, String startYear, String endYear) {
+	public SearchAuthorPublication (String author, String startYear, String endYear, ArrayList<AuthorNames> authorEntities) {
 		
 		recAuthor = author;
 		recStartYear = Integer.parseInt(startYear);
 		recEndYear = Integer.parseInt(endYear);
 
 		bSince = false;
+
+		searchForEntities(authorEntities);
+
 	}
 
+	public void searchForEntities(ArrayList<AuthorNames> authorEntities) {
+		this.authorEntities = authorEntities;
 
+		for (AuthorNames a : authorEntities) {
+			if (search(a.getAlias(), recAuthor)) {
+				authorAlias = a.getAlias();
+			}
+		}
+	}
+
+	public boolean search (ArrayList<String> arr, String str) {
+		for (String x : arr) {
+			if (x.equals(str))
+				return true;
+		}
+
+		return false;
+	}
 
 
 	@Override
@@ -115,7 +140,7 @@ public class SearchAuthorPublication extends DefaultHandler {
 			
 			bAuthor = false;
 			// System.out.println("author:"+listString.toString() + listString.toString().equals(recAuthor));
-			if (listString.toString().equals(recAuthor)) {
+			if (search(authorAlias,listString.toString())) {
 				bTitleMatch = true;
 			}
 
@@ -218,6 +243,16 @@ public class SearchAuthorPublication extends DefaultHandler {
 			arr[i][7] = q1Display.get(i).url;
 		}
 
+		// arr = sort(arr, 4);
+
 		return arr;
 	}
+
+	// public void sort (String[][] arr, int 4) {
+		
+	// }
+
+	// public String[][] sort(String[][] arr, int col) {
+
+	// }
 }
