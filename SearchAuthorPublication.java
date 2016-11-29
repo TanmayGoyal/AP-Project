@@ -37,6 +37,10 @@ public class SearchAuthorPublication extends DefaultHandler {
 	ArrayList<String> authorAlias = new ArrayList<String>();
 	ArrayList<AuthorNames> authorEntities = new ArrayList<AuthorNames>();
 
+	/**
+   	* This is an overloaded constructor where title and year 
+   	* values are set to instance variables.
+   	*/
 	public SearchAuthorPublication (String author, String year, ArrayList<AuthorNames> authorEntities) {
 		recAuthor = author;
 		recYear = Integer.parseInt(year);
@@ -46,6 +50,10 @@ public class SearchAuthorPublication extends DefaultHandler {
 		searchForEntities(authorEntities);
 	}
 
+	/**
+   	* This is an overloaded constructor where title and year (for both 
+   	* start and end) values are set to instance variables.
+   	*/
 	public SearchAuthorPublication (String author, String startYear, String endYear, ArrayList<AuthorNames> authorEntities) {
 		
 		recAuthor = author;
@@ -55,9 +63,9 @@ public class SearchAuthorPublication extends DefaultHandler {
 		bSince = false;
 
 		searchForEntities(authorEntities);
-
 	}
 
+	///This method searches for any aliases of authors and then assigns them to the original authors if any are found.
 	public void searchForEntities(ArrayList<AuthorNames> authorEntities) {
 		this.authorEntities = authorEntities;
 
@@ -68,6 +76,7 @@ public class SearchAuthorPublication extends DefaultHandler {
 		}
 	}
 
+	///This method performs a search to find a same string and returns true if found else false.
 	public boolean search (ArrayList<String> arr, String str) {
 		for (String x : arr) {
 			if (x.equals(str))
@@ -77,7 +86,7 @@ public class SearchAuthorPublication extends DefaultHandler {
 		return false;
 	}
 
-
+	///This is an overridden method from DefaultHandler which reads the starting tag of an element in the XML file.
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		if (qName.equalsIgnoreCase("article") || qName.equalsIgnoreCase("phdthesis")|| qName.equalsIgnoreCase("mastersthesis")|| qName.equalsIgnoreCase("www")|| qName.equalsIgnoreCase("incollection")|| qName.equalsIgnoreCase("book")|| qName.equalsIgnoreCase("proceedings")|| qName.equalsIgnoreCase("inproceedings")) {
@@ -111,9 +120,11 @@ public class SearchAuthorPublication extends DefaultHandler {
 		else if (qName.equalsIgnoreCase("url")) {
 			bUrl = true;
 		}
-
 	}
+	/**< It only reads the tags of the elements that have 
+	* been explicity added by programmer to check from the XML file.*/
 
+	///This is an overridden method from DefaultHandler which reads the content between the opening and closing tags of an XML file.
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		// System.out.println(qName);
@@ -182,6 +193,7 @@ public class SearchAuthorPublication extends DefaultHandler {
 		}
 	}
 
+	///This is an overridden method from DefaultHandler which reads the closing tag of an element in the XML file	
 	@Override
 	public void characters(char ch[], int start, int length) throws SAXException {
 		if (bAuthor) {
@@ -220,15 +232,16 @@ public class SearchAuthorPublication extends DefaultHandler {
 		else if (bUrl) {
 			q1Object.url = new String(ch, start, length);
 		}
-
 	}
 
+	///This method is used to print the output on the console. (Just for checking purposes)
 	public void printData() {
 		for (Query1DisplayStructure x : q1Display) {
 			x.printData();			
 		}
 	}
 
+	///This method is used to retrieve the data from the ArrayList and place it in a 2D array.
 	public String[][] getArray() {
 		String[][] arr = new String[q1Display.size()][8];
 
@@ -256,12 +269,7 @@ public class SearchAuthorPublication extends DefaultHandler {
 
 		return arr;
 	}
-
-	// public void sort (String[][] arr, int 4) {
-		
-	// }
-
-	// public String[][] sort(String[][] arr, int col) {
-
-	// }
+	/**< It receives the data from the ArrayList which contains the data
+	* and maps it to a 2D array so that it can be used to display the output
+	* on the table. It also sorts the data in the 2D array based on year.*/
 }

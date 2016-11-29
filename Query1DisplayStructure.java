@@ -9,6 +9,7 @@ public class Query1DisplayStructure {
 	String journal;
 	String url;
 
+	///This method is used to print the output on the console. (Just for checking purposes)
 	public void printData () {
 		System.out.print("Authors : ");
 		for (String x : allAuthors)
@@ -26,6 +27,7 @@ public class Query1DisplayStructure {
 		System.out.println();	
 	}
 
+	///This method adds the names of authors to an ArrayList<String>.
 	public String allAuthorsToString() {
 		ArrayList<String> foo = new ArrayList<String>();
 

@@ -136,7 +136,7 @@ public class SearchTitleRelevance extends DefaultHandler {
 		}
 	}
 
-	///This is an overridden method from DefaultHandler which reads the closing tag of an element in the XML file
+	///This is an overridden method from DefaultHandler which reads the closing tag of an element in the XML file.
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		if (qName.equalsIgnoreCase("article") || qName.equalsIgnoreCase("phdthesis")|| qName.equalsIgnoreCase("mastersthesis")|| qName.equalsIgnoreCase("www")|| qName.equalsIgnoreCase("incollection")|| qName.equalsIgnoreCase("book")|| qName.equalsIgnoreCase("proceedings")|| qName.equalsIgnoreCase("inproceedings")) {

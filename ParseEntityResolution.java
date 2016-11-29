@@ -13,6 +13,8 @@ public class ParseEntityResolution extends DefaultHandler{
 
 	AuthorNames authorNames;
 
+	///This is an overridden method from DefaultHandler which reads the starting tag of an element in the XML file.
+	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		if (qName.equalsIgnoreCase("www")) {
 			bwww = true;
@@ -26,14 +28,19 @@ public class ParseEntityResolution extends DefaultHandler{
 			bAuthor = true;
 		}
 	}
+	/**< It only reads the tags of the elements that have 
+	* been explicity added by programmer to check from the XML file.*/
 
+	///This is an overridden method from DefaultHandler which reads the content between the opening and closing tags of an XML file.
+	@Override
 	public void characters(char ch[], int start, int length) throws SAXException {
 		if (bAuthor) {
 			partAuthor.add(new String(ch, start, length));
 		}
 	}
 
-
+	///This is an overridden method from DefaultHandler which reads the closing tag of an element in the XML file.
+	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		if (qName.equalsIgnoreCase("www")) {
 			bAuthor = false;
@@ -62,6 +69,7 @@ public class ParseEntityResolution extends DefaultHandler{
 		}
 	}
 
+	///This method is used to print the output on the console. (Just for checking purposes)
 	public void printData() {
 
 		for (AuthorNames x : authors) {
@@ -72,6 +80,7 @@ public class ParseEntityResolution extends DefaultHandler{
 		}
 	}
 
+	///This method returns an ArrayList<AuthorName>.
 	public ArrayList<AuthorNames> getEntityAuthors() {
 		return authors;
 	}

@@ -32,6 +32,10 @@ public class SearchTitlePublications extends DefaultHandler{
 	ArrayList<String> partTitle;
 	Query1DisplayStructure q1Object;
 
+	/**
+   	* This is an overloaded constructor where title and year 
+   	* values are set to instance variables.
+   	*/
 	public SearchTitlePublications (String title, String year, ArrayList<AuthorNames> authorEntities) {
 		recTitle = title;
 		recYear = Integer.parseInt(year);
@@ -39,6 +43,10 @@ public class SearchTitlePublications extends DefaultHandler{
 		bSince = true;
 	}
 
+	/**
+   	* This is an overloaded constructor where title and year (for both 
+   	* start and end) values are set to instance variables.
+   	*/
 	public SearchTitlePublications (String title, String startYear, String endYear, ArrayList<AuthorNames> authorEntities) {
 		
 		recTitle = title;
@@ -47,7 +55,8 @@ public class SearchTitlePublications extends DefaultHandler{
 
 		bSince = false;
 	}
-
+	
+	///This is an overridden method from DefaultHandler which reads the starting tag of an element in the XML file.
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 		if (qName.equalsIgnoreCase("article") || qName.equalsIgnoreCase("phdthesis")|| qName.equalsIgnoreCase("mastersthesis")|| qName.equalsIgnoreCase("www")|| qName.equalsIgnoreCase("incollection")|| qName.equalsIgnoreCase("book")|| qName.equalsIgnoreCase("proceedings")|| qName.equalsIgnoreCase("inproceedings")) {
@@ -81,9 +90,11 @@ public class SearchTitlePublications extends DefaultHandler{
 		else if (qName.equalsIgnoreCase("url")) {
 			bUrl = true;
 		}
-
 	}
+	/**< It only reads the tags of the elements that have 
+	* been explicity added by programmer to check from the XML file.*/
 
+	///This is an overridden method from DefaultHandler which reads the content between the opening and closing tags of an XML file.
 	@Override
 	public void characters(char ch[], int start, int length) throws SAXException {
 		if (bAuthor) {
@@ -123,9 +134,9 @@ public class SearchTitlePublications extends DefaultHandler{
 		else if (bUrl) {
 			q1Object.url = new String(ch, start, length);
 		}
-
 	}
 
+	///This is an overridden method from DefaultHandler which reads the closing tag of an element in the XML file.
 	@Override
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		// System.out.println(qName);
@@ -196,12 +207,14 @@ public class SearchTitlePublications extends DefaultHandler{
 		}
 	}
 
+	///This method is used to print the output on the console. (Just for checking purposes)
 	public void printData() {
 		for (Query1DisplayStructure x : q1Display) {
 			x.printData();			
 		}
 	}
 
+	///This method is used to retrieve the data from the ArrayList and place it in a 2D array.
 	public String[][] getArray() {
 		String[][] arr = new String[q1Display.size()][8];
 
@@ -231,4 +244,7 @@ public class SearchTitlePublications extends DefaultHandler{
 
 		return arr;
 	}
+	/**< It receives the data from the ArrayList which contains the data
+	* and maps it to a 2D array so that it can be used to display the output
+	* on the table. It also sorts the data in the 2D array based on year.*/
 }
