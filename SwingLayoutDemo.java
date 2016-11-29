@@ -46,7 +46,7 @@ public class SwingLayoutDemo {
 
    GetKPublications kPublications;// = new GetKPublications(hashMap,k);
 
-   private String fileName = "input1.xml";
+   private String fileName = "dblp.xml";
 
    /**
    * This is the constructor for the initial parsing and the GUI interface.
@@ -57,7 +57,8 @@ public class SwingLayoutDemo {
    *
    */
    public SwingLayoutDemo(){
-      System.out.println("Please wait while loading...");
+      prepareGUI();
+      System.out.println("Please wait while it loads...");
 
       ParseEntityResolution per = new ParseEntityResolution();
       SAXParser saxParser = getSAXParser();
@@ -73,24 +74,22 @@ public class SwingLayoutDemo {
       authorEntities = per.getEntityAuthors();
 
      
-      System.out.println("almost done :)");
+      System.out.println("Almost Done :)");
       getKPublications(0);
-      System.out.println("...thank you :)");
-
-      prepareGUI();
+      System.out.println("...Thank You :)");
 
       //Query 1 Panel*****************************************
       panelQuery1();
       //Query 2 Panel*****************************************
       panelQuery2();
       //Query 3 Panel*****************************************
-      panelQuery3();
+      // panelQuery3();
 
       
       panel.add("Select a Query", noQueryPanel);
       panel.add("Query 1", query1Panel);
       panel.add("Query 2", query2Panel);
-      panel.add("Query 3", query3Panel);
+      // panel.add("Query 3", query3Panel);
       
 
       //ComboBox Panel*****************************************
@@ -209,13 +208,14 @@ public class SwingLayoutDemo {
 
    ///This method creates the panel for Query 1.
    public void panelQuery1() {
-      query1Panel = new JPanel(new GridLayout(7, 1));
+      query1Panel = new JPanel(new GridLayout(8, 1));
       JPanel query11Panel = new JPanel(new FlowLayout());
       JPanel query12Panel = new JPanel(new FlowLayout());
       JPanel query13Panel = new JPanel(new FlowLayout());
       JPanel query14Panel = new JPanel(new FlowLayout());
       JPanel query15Panel = new JPanel(new FlowLayout());
       JPanel query16Panel = new JPanel(new FlowLayout());
+      JPanel query17Panel = new JPanel(new FlowLayout());
 
       final DefaultComboBoxModel<String> searchBy = new DefaultComboBoxModel<String>();
 
@@ -299,7 +299,9 @@ public class SwingLayoutDemo {
                      JOptionPane.showMessageDialog(null, "Please enter a valid format.", "Warning", JOptionPane.WARNING_MESSAGE);
                   }
                }
-
+               else {
+                  JOptionPane.showMessageDialog(null, "Please enter a valid format.", "Warning", JOptionPane.WARNING_MESSAGE);
+               }
             }
             else if (searchType.equals("By Title Tag")) {
                if (yearSortButton.isSelected()) {
@@ -346,12 +348,22 @@ public class SwingLayoutDemo {
       });
       query15Panel.add(reset1Button);//Row 6
 
+      JButton exit1Button = new JButton("Exit");
+      exit1Button.addActionListener (new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            System.exit(0);
+         }
+      });
+      query17Panel.add(exit1Button);
+
       query1Panel.add(query11Panel);
       query1Panel.add(query12Panel);
       query1Panel.add(query13Panel);
       query1Panel.add(query14Panel);
       query1Panel.add(query16Panel);
-      query1Panel.add(query15Panel);//end query1 panels.
+      query1Panel.add(query15Panel);
+      query1Panel.add(query17Panel);//end query1 panels.
    }
    /**< It creates a combo box for the search by Author
    * and Title Tag. It then creates the respective panels
@@ -364,6 +376,7 @@ public class SwingLayoutDemo {
 
       JPanel query21Panel = new JPanel(new FlowLayout());
       JPanel query22Panel = new JPanel(new FlowLayout());
+      JPanel query23Panel = new JPanel(new FlowLayout());
 
       JLabel publicationsLabel = new JLabel("No. of Publications:");
       query21Panel.add(publicationsLabel);
@@ -381,7 +394,22 @@ public class SwingLayoutDemo {
                // }
                
                map = kPublications.getAuthors(Integer.parseInt(publicationsField.getText()));
-               getQ2Table();
+               boolean notNull = false;
+               for(String[] array : map) {
+                  for(String val : array) {
+                     if(val != null){
+                     notNull = true;
+                     break;
+                     }
+                  }
+               }
+               if (!notNull) {
+                  getStartTableNew();
+                  JOptionPane.showMessageDialog(null, "Table Empty", "Warning", JOptionPane.WARNING_MESSAGE);
+               }
+               else {
+                  getQ2Table();
+               }
             } catch (NumberFormatException num) {
                JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
             }
@@ -400,8 +428,18 @@ public class SwingLayoutDemo {
       });
       query22Panel.add(reset2Button);//Row 2
 
+      JButton exit2Button = new JButton("Exit");
+      exit2Button.addActionListener (new ActionListener() {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            System.exit(0);
+         }
+      });
+      query23Panel.add(exit2Button);
+
       query2Panel.add(query21Panel);
-      query2Panel.add(query22Panel);//end query2 panels.
+      query2Panel.add(query22Panel);
+      query2Panel.add(query23Panel);//end query2 panels.
    }
    /**< It creates a field for receiving the number of 
    * publications.*/
@@ -479,7 +517,7 @@ public class SwingLayoutDemo {
       panelName.addElement("Select a Query");
       panelName.addElement("Query 1");
       panelName.addElement("Query 2");
-      panelName.addElement("Query 3");
+      // panelName.addElement("Query 3");
       
       final JComboBox<String> listCombo = new JComboBox<String>(panelName);    
       listCombo.setSelectedIndex(0);
@@ -510,13 +548,13 @@ public class SwingLayoutDemo {
    ///This method creates the Table which displays the results of the queries.
    public void panelResultTable() {
       getStartTable();
-      table.setRowHeight(26);
+      table.setRowHeight(25);
       final JScrollPane scrollPane = new JScrollPane(table);
       // scrollPane.setPreferredSize(new Dimension(1500, 1000));
       scrollPane.setPreferredSize(new Dimension(850, 300));
       scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-      final JButton next = new JButton("next");
-      final JButton prev = new JButton("prev");
+      final JButton next = new JButton(">>");
+      final JButton prev = new JButton("<<");
 
       ActionListener al = new ActionListener(){
          public void actionPerformed(ActionEvent e) {
@@ -574,9 +612,24 @@ public class SwingLayoutDemo {
 
    ///This method creates a new Table which matches the output of Query 1 (By Author Name).
    private void getQ1Table(String[][] arr) { //SNO, AUTHORS, TITLE, PAGES, YEAR, VOLUME, JOURNAL, URL
-        String[] colNames = new String[] {"SNo", "Authors", "Title", "Pages", "Year", "Volume", "Journal", "url"};
-        DefaultTableModel dtm = new DefaultTableModel(arr, colNames);
-        table.setModel(dtm);
+      boolean notNull = false;
+      for(String[] array : arr) {
+         for(String val : array) {
+            if(val != null){
+               notNull = true;
+               break;
+            }
+         }
+      }
+      if (!notNull) {
+         getStartTableNew();
+         JOptionPane.showMessageDialog(null, "Table Empty", "Warning", JOptionPane.WARNING_MESSAGE);
+      }
+      else {
+         String[] colNames = new String[] {"SNo", "Authors", "Title", "Pages", "Year", "Volume", "Journal", "url"};
+         DefaultTableModel dtm = new DefaultTableModel(arr, colNames);
+         table.setModel(dtm);
+      }
    }
 
    ///This method creates a new Table which matches the output of Query 1 (By Title Tag).

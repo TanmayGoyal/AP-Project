@@ -3,6 +3,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import java.util.*;
 
+/**
+ *  The GetKPublications class.
+ */
 public class GetKPublications extends DefaultHandler{
 	boolean bAuthor = false;
 	boolean bIgnore = false;
@@ -25,7 +28,7 @@ public class GetKPublications extends DefaultHandler{
 		// searchForEntities(authorEntities);
 	}
 
-	///This methos will merge all the alias of one author in the map
+	///This method will merge all the alias of one author in the map
 	public void mergeAliasMap() {
 
 		for (AuthorNames x : authorEntities) {
@@ -61,7 +64,7 @@ public class GetKPublications extends DefaultHandler{
 		printMap();
 	}
 
-
+	///This method searches for similar entities of authors and assigns them to the main author's name.
 	public void searchForEntities(ArrayList<AuthorNames> authorEntities, String recAuthor) {
 		// this.authorEntities = authorEntities;
 
@@ -71,7 +74,7 @@ public class GetKPublications extends DefaultHandler{
 			}
 		}
 	}
-
+	///This method searches for matching Strings and returns true if its found.
 	public boolean search (ArrayList<String> arr, String str) {
 		for (String x : arr) {
 			if (x.equals(str))
