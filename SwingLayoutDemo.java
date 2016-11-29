@@ -46,7 +46,7 @@ public class SwingLayoutDemo {
 
    GetKPublications kPublications;// = new GetKPublications(hashMap,k);
 
-   private String fileName = "dblp.xml";
+   private String fileName = "input1.xml";
 
    /**
    * This is the constructor for the initial parsing and the GUI interface.
@@ -271,14 +271,22 @@ public class SwingLayoutDemo {
          public void actionPerformed(ActionEvent e) {
 
             String searchType = (String)comboBox.getSelectedItem();
-
+            // if(sinceYearField.getText().length() != 4 && (customStartRangeField.getText().length() != 4 || customEndRangeField.getText().length() != 4)) {
+            //    if (!(sinceYearField.getText().equals("")) || !customStartRangeField.getText().equals("") || !customEndRangeField.getText().equals("")) {
+            //       JOptionPane.showMessageDialog(null, "Please enter a valid format for year.", "Warning", JOptionPane.WARNING_MESSAGE);
+            //    }
+            // }
             if (searchType.equals("By Author Name")) {
+
                if (yearSortButton.isSelected()) {
                   if (!(sinceYearField.getText().equals("")) && customStartRangeField.getText().equals("") && customEndRangeField.getText().equals("")) {
                      getAuthorYearSorted(nameField.getText(), sinceYearField.getText());
                   }
                   else if (sinceYearField.getText().equals("") && !(customStartRangeField.getText().equals("")) && !(customEndRangeField.getText().equals(""))) {
                      getAuthorYearSorted(nameField.getText(), customStartRangeField.getText(), customEndRangeField.getText());
+                  }
+                  else if (sinceYearField.getText().equals("") && customStartRangeField.getText().equals("") && customEndRangeField.getText().equals("")) {
+                     getAuthorYearSorted(nameField.getText(), "1700");
                   }
                   else {
                      JOptionPane.showMessageDialog(null, "Please enter a valid format.", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -295,12 +303,16 @@ public class SwingLayoutDemo {
                      getAuthorYearSorted(nameField.getText(), customStartRangeField.getText(), customEndRangeField.getText());
 
                   }
+
+                  else if (sinceYearField.getText().equals("") && customStartRangeField.getText().equals("") && customEndRangeField.getText().equals("")) {
+                     getAuthorYearSorted(nameField.getText(), "1700");
+                  }
                   else {
                      JOptionPane.showMessageDialog(null, "Please enter a valid format.", "Warning", JOptionPane.WARNING_MESSAGE);
                   }
                }
                else {
-                  JOptionPane.showMessageDialog(null, "Please enter a valid format.", "Warning", JOptionPane.WARNING_MESSAGE);
+                  JOptionPane.showMessageDialog(null, "Please select one of the sorting methods.", "Warning", JOptionPane.WARNING_MESSAGE);
                }
             }
             else if (searchType.equals("By Title Tag")) {
@@ -310,6 +322,10 @@ public class SwingLayoutDemo {
                   }
                   else if (sinceYearField.getText().equals("") && !(customStartRangeField.getText().equals("")) && !(customEndRangeField.getText().equals(""))) {
                      getTitleYearSorted(nameField.getText(), customStartRangeField.getText(), customEndRangeField.getText());
+                  }
+
+                  else if (sinceYearField.getText().equals("") && customStartRangeField.getText().equals("") && customEndRangeField.getText().equals("")) {
+                     getTitleYearSorted(nameField.getText(), "1700");
                   }
                   else {
                      JOptionPane.showMessageDialog(null, "Please enter a valid format.", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -324,10 +340,18 @@ public class SwingLayoutDemo {
                      //RANGE
                      getTitleYearRelevance(nameField.getText(), customStartRangeField.getText(), customEndRangeField.getText());
                   }
+                  else if (sinceYearField.getText().equals("") && customStartRangeField.getText().equals("") && customEndRangeField.getText().equals("")) {
+                     getTitleYearSorted(nameField.getText(), "1700");
+                  }
                   else {
                      JOptionPane.showMessageDialog(null, "Please enter a valid format.", "Warning", JOptionPane.WARNING_MESSAGE);
                   }
                }
+            }
+
+            else {
+               JOptionPane.showMessageDialog(null, "Please select a query.", "Warning", JOptionPane.WARNING_MESSAGE);
+
             }
 
          }
@@ -392,24 +416,30 @@ public class SwingLayoutDemo {
                // if(publicationsField.getText() != null && publicationsField.getText().equals("")){
                //    JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Title", JOptionPane.WARNING_MESSAGE);
                // }
-               
-               map = kPublications.getAuthors(Integer.parseInt(publicationsField.getText()));
-               boolean notNull = false;
-               for(String[] array : map) {
-                  for(String val : array) {
-                     if(val != null){
-                     notNull = true;
-                     break;
-                     }
-                  }
-               }
-               if (!notNull) {
-                  getStartTableNew();
-                  JOptionPane.showMessageDialog(null, "Table Empty", "Warning", JOptionPane.WARNING_MESSAGE);
+
+               if (Integer.parseInt(publicationsField.getText())<0) {
+                  JOptionPane.showMessageDialog(null, "Please enter a positive integer.", "Warning", JOptionPane.WARNING_MESSAGE);
+
                }
                else {
-                  getQ2Table();
-               }
+                  map = kPublications.getAuthors(Integer.parseInt(publicationsField.getText()));
+                  boolean notNull = false;
+                  for(String[] array : map) {
+                     for(String val : array) {
+                        if(val != null){
+                        notNull = true;
+                        break;
+                        }
+                     }
+                 }
+                  if (!notNull) {
+                     getStartTableNew();
+                     JOptionPane.showMessageDialog(null, "Table Empty", "Warning", JOptionPane.WARNING_MESSAGE);
+                  }
+                  else {
+                     getQ2Table();
+                  }
+               }  
             } catch (NumberFormatException num) {
                JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
             }
@@ -548,7 +578,7 @@ public class SwingLayoutDemo {
    ///This method creates the Table which displays the results of the queries.
    public void panelResultTable() {
       getStartTable();
-      table.setRowHeight(25);
+      table.setRowHeight(26);
       final JScrollPane scrollPane = new JScrollPane(table);
       // scrollPane.setPreferredSize(new Dimension(1500, 1000));
       scrollPane.setPreferredSize(new Dimension(850, 300));
@@ -626,6 +656,13 @@ public class SwingLayoutDemo {
          JOptionPane.showMessageDialog(null, "Table Empty", "Warning", JOptionPane.WARNING_MESSAGE);
       }
       else {
+
+         int i = 1;
+         for (String[] x : arr) {
+            x[0] = Integer.toString(i);
+            i++;
+         }
+
          String[] colNames = new String[] {"SNo", "Authors", "Title", "Pages", "Year", "Volume", "Journal", "url"};
          DefaultTableModel dtm = new DefaultTableModel(arr, colNames);
          table.setModel(dtm);
@@ -731,13 +768,25 @@ public class SwingLayoutDemo {
    public void getAuthorYearSorted(String name, String year) {
       try {
          int foo = Integer.parseInt(year);
-         SAXParser saxParser = getSAXParser();
 
-         SearchAuthorPublication publ = new SearchAuthorPublication(name, year, authorEntities);
+         if (foo>2017) {
+            JOptionPane.showMessageDialog(null, "Please enter year lesser than current year.", "Warning", JOptionPane.WARNING_MESSAGE);
 
-         saxParser.parse(is, publ);
+         }
+         else if (foo<1000) {
+            JOptionPane.showMessageDialog(null, "Please enter year closer to current year.", "Warning", JOptionPane.WARNING_MESSAGE);
 
-         getQ1Table(publ.getArray());
+         }
+         else {
+            SAXParser saxParser = getSAXParser();
+
+            SearchAuthorPublication publ = new SearchAuthorPublication(name, year, authorEntities);
+
+            saxParser.parse(is, publ);
+
+            getQ1Table(publ.getArray());
+         }
+         
 
          // publ.printData();
       }
@@ -755,16 +804,30 @@ public class SwingLayoutDemo {
          int foo = Integer.parseInt(startYear);
          int bar = Integer.parseInt(endYear);
 
-         if (foo >= bar)
-            throw new Exception();
+         if (foo >= bar) {
+            JOptionPane.showMessageDialog(null, "Start year cannot be greater than end year.", "Warning", JOptionPane.WARNING_MESSAGE);
 
-         SAXParser saxParser = getSAXParser();
+            // throw new Exception();
+         }
+         else if (bar > 2017) {
+            JOptionPane.showMessageDialog(null, "Year cannot be greater than current year.", "Warning", JOptionPane.WARNING_MESSAGE);
 
-         SearchAuthorPublication publ = new SearchAuthorPublication(name, startYear, endYear, authorEntities);
+         }
+         else if (foo < 1000) {
+            JOptionPane.showMessageDialog(null, "Please bring start year closer to current year.", "Warning", JOptionPane.WARNING_MESSAGE);
 
-         saxParser.parse(is, publ);
+         }
+         else {
+            SAXParser saxParser = getSAXParser();
 
-         getQ1Table(publ.getArray());
+            SearchAuthorPublication publ = new SearchAuthorPublication(name, startYear, endYear, authorEntities);
+
+            saxParser.parse(is, publ);
+
+            getQ1Table(publ.getArray());
+         }
+
+         
 
          // publ.printData();
       }
@@ -782,13 +845,26 @@ public class SwingLayoutDemo {
    public void getTitleYearSorted(String name, String year) {
       try {
          int foo = Integer.parseInt(year);
-         SAXParser saxParser = getSAXParser();
 
-         SearchTitlePublications publ = new SearchTitlePublications(name, year, authorEntities);
+         if (foo>2017) {
+            JOptionPane.showMessageDialog(null, "Please enter year lesser than current year.", "Warning", JOptionPane.WARNING_MESSAGE);
 
-         saxParser.parse(is, publ);
+         }
+         else if (foo<1000) {
+            JOptionPane.showMessageDialog(null, "Please enter year closer to current year.", "Warning", JOptionPane.WARNING_MESSAGE);
 
-         getQ1Table(publ.getArray());
+         }
+         else {
+
+
+            SAXParser saxParser = getSAXParser();
+
+            SearchTitlePublications publ = new SearchTitlePublications(name, year, authorEntities);
+
+            saxParser.parse(is, publ);
+
+            getQ1Table(publ.getArray());
+         }
 
          // publ.printData();
       }
@@ -805,16 +881,30 @@ public class SwingLayoutDemo {
       try {
          int foo = Integer.parseInt(startYear);
          int bar = Integer.parseInt(endYear);
-         if (foo >= bar)
-            throw new Exception();
+         if (foo >= bar) {
+            JOptionPane.showMessageDialog(null, "Start year cannot be greater than end year.", "Warning", JOptionPane.WARNING_MESSAGE);
 
-         SAXParser saxParser = getSAXParser();
+            // throw new Exception();
+         }
 
-         SearchTitlePublications publ = new SearchTitlePublications(name, startYear, endYear, authorEntities);
+         else if (bar > 2017) {
+            JOptionPane.showMessageDialog(null, "Year cannot be greater than current year.", "Warning", JOptionPane.WARNING_MESSAGE);
 
-         saxParser.parse(is, publ);
+         }
+         else if (foo < 1000) {
+            JOptionPane.showMessageDialog(null, "Please bring start year closer to current year.", "Warning", JOptionPane.WARNING_MESSAGE);
 
-         getQ1Table(publ.getArray());
+         }
+         else {
+
+            SAXParser saxParser = getSAXParser();
+
+            SearchTitlePublications publ = new SearchTitlePublications(name, startYear, endYear, authorEntities);
+
+            saxParser.parse(is, publ);
+
+            getQ1Table(publ.getArray());
+         }
 
          // publ.printData();
       }
@@ -833,14 +923,26 @@ public class SwingLayoutDemo {
 
       try {
          int foo = Integer.parseInt(year);
-         SAXParser saxParser = getSAXParser();
 
-         SearchTitleRelevance publ = new SearchTitleRelevance(name, year, authorEntities);
+         if (foo>2017) {
+            JOptionPane.showMessageDialog(null, "Please enter year lesser than current year.", "Warning", JOptionPane.WARNING_MESSAGE);
 
-         saxParser.parse(is, publ);
+         }
+         else if (foo<1000) {
+            JOptionPane.showMessageDialog(null, "Please enter year closer to current year.", "Warning", JOptionPane.WARNING_MESSAGE);
 
-         getQ1RelevanceTable(publ.getArray());
+         }
+         else if (foo < 1000) {
+            JOptionPane.showMessageDialog(null, "Please bring start year closer to current year.", "Warning", JOptionPane.WARNING_MESSAGE);
 
+         }
+         else {
+            SAXParser saxParser = getSAXParser();
+            SearchTitleRelevance publ = new SearchTitleRelevance(name, year, authorEntities);
+            saxParser.parse(is, publ);
+            getQ1RelevanceTable(publ.getArray());
+
+         }
          // publ.printData();
       }
       catch (NumberFormatException num) {
@@ -859,16 +961,31 @@ public class SwingLayoutDemo {
       try {
          int foo = Integer.parseInt(startYear);
          int bar = Integer.parseInt(endYear);
-         if (foo >= bar)
-            throw new Exception();
+         if (foo >= bar) {
+            JOptionPane.showMessageDialog(null, "Start year cannot be greater than end year.", "Warning", JOptionPane.WARNING_MESSAGE);
 
-         SAXParser saxParser = getSAXParser();
+            // throw new Exception();
+         }
 
-         SearchTitleRelevance publ = new SearchTitleRelevance(name, startYear, endYear, authorEntities);
+         else if (bar > 2017) {
+            JOptionPane.showMessageDialog(null, "Year cannot be greater than current year.", "Warning", JOptionPane.WARNING_MESSAGE);
 
-         saxParser.parse(is, publ);
+         }
+         else if (foo < 1000) {
+            JOptionPane.showMessageDialog(null, "Please bring start year closer to current year.", "Warning", JOptionPane.WARNING_MESSAGE);
 
-         getQ1RelevanceTable(publ.getArray());
+         }
+
+         else {
+
+            SAXParser saxParser = getSAXParser();
+
+            SearchTitleRelevance publ = new SearchTitleRelevance(name, startYear, endYear, authorEntities);
+
+            saxParser.parse(is, publ);
+
+            getQ1RelevanceTable(publ.getArray());
+         }
 
          // publ.printData();
       }

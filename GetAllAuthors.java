@@ -12,6 +12,7 @@ public class GetAllAuthors extends DefaultHandler {
 	int count = 0;
 
 	HashMap<String,Integer> map = new HashMap<String,Integer>();
+	
 	ArrayList<String> partAuthor;
 
 	///This is an overridden method from DefaultHandler which reads the starting tag of an element in the XML file.
