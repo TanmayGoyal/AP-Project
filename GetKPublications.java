@@ -131,7 +131,7 @@ public class GetKPublications extends DefaultHandler{
 	public String[][] getAuthors (int _k) {
 		int count = 0;
 		// System.out.println("hello from getAuthors : " + count);
-		System.out.println(_k);
+		// System.out.println(_k);
 		for (String s : map.keySet()) {
 			// System.out.println("inside loop : " + map.get(s) + "  " + s);
 			if (map.get(s) > _k) {
@@ -180,9 +180,9 @@ public class GetKPublications extends DefaultHandler{
 	public void printMap() {
 		for (String name : map.keySet()){
 
-            String key = name.toString();
-            String value = map.get(name).toString();  
-            System.out.println(key + " " + value);  
+            // String key = name.toString();
+            // String value = map.get(name).toString();  
+            // System.out.println(key + " " + value);  
         }
 	}
 }

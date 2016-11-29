@@ -38,7 +38,7 @@ public class SwingLayoutDemo {
    private SAXParser saxParser;
 
    private String[][] map;
-   private int q2Count;
+   // private int q2Count;
    private static JTable table;
 
    private ArrayList<AuthorNames> authorEntities = new ArrayList<AuthorNames>();
@@ -524,7 +524,7 @@ public class SwingLayoutDemo {
             JScrollBar  bar = scrollPane.getVerticalScrollBar();
             int blockIncr = scrollPane.getViewport().getViewRect().height;
             // int blockIncr = 505;
-            System.out.println(blockIncr);
+            // System.out.println(blockIncr);
             if (e.getSource() == next) {
                bar.setValue(bar.getValue() + blockIncr);
             } 
@@ -630,8 +630,8 @@ public class SwingLayoutDemo {
 
          HashMap<String,Integer> hashMap = publ.getHashMap();
 
-         kPublications = new GetKPublications(hashMap,k);
-         q2Count = kPublications.getCount();
+         kPublications = new GetKPublications(hashMap,k,authorEntities);
+         // q2Count = kPublications.getCount();
 
          System.out.println("second");
          kPublications = parseAgain(kPublications);
@@ -713,7 +713,7 @@ public class SwingLayoutDemo {
 
          getQ1Table(publ.getArray());
 
-         publ.printData();
+         // publ.printData();
       }
       catch (NumberFormatException num) {
          JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
