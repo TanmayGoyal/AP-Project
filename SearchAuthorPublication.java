@@ -243,6 +243,15 @@ public class SearchAuthorPublication extends DefaultHandler {
 			arr[i][7] = q1Display.get(i).url;
 		}
 
+		Arrays.sort(arr, new Comparator<String[]>() {
+            @Override
+            public int compare(final String[] entry1, final String[] entry2) {
+                int time1 = Integer.parseInt(entry1[4]);
+                int time2 = Integer.parseInt(entry2[4]);
+                return time2-time1;
+            }
+        });
+
 		// arr = sort(arr, 4);
 
 		return arr;

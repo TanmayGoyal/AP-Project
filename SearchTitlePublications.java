@@ -216,6 +216,19 @@ public class SearchTitlePublications extends DefaultHandler{
 			arr[i][7] = q1Display.get(i).url;
 		}
 
+		Arrays.sort(arr, new Comparator<String[]>() {
+            @Override
+            public int compare(final String[] entry1, final String[] entry2) {
+                double time1 = Double.parseDouble(entry1[4]);
+                double time2 = Double.parseDouble(entry2[4]);
+
+                time1 = time1*100;
+                time2 = time2*100;
+
+                return (int)time2-(int)time1;
+            }
+        });
+
 		return arr;
 	}
 }

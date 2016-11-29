@@ -649,7 +649,7 @@ public class SwingLayoutDemo {
 
          getQ1Table(publ.getArray());
 
-         publ.printData();
+         // publ.printData();
       }
       catch (NumberFormatException num) {
          JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -750,6 +750,7 @@ public class SwingLayoutDemo {
          // publ.printData();
       }
       catch (NumberFormatException num) {
+         // num.printStackTrace();
          JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
       }
       catch (Exception e) {
