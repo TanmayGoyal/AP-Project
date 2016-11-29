@@ -1,5 +1,8 @@
 import java.util.*;
 
+/**
+ *  The Query1DisplayStructure class.
+ */
 public class Query1DisplayStructure {
 	ArrayList<String> allAuthors = new ArrayList<String>();
 	String title;

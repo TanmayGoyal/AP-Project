@@ -3,6 +3,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ *  The DBLPWelcome class. This class starts the program.
+ */
 public class DBLPWelcome extends JFrame {
 	private JPanel panel;
 	private JLabel label;
@@ -11,6 +14,7 @@ public class DBLPWelcome extends JFrame {
 	private final int WINDOW_HGT = 300;
 	private final int WINDOW_WTH = 400;
 
+	/** This is a constructor for creating the GUI of the welcome window.*/
 	public DBLPWelcome () {
 		panel = new JPanel();
 		this.setTitle("DBLP Query Engine");
@@ -51,7 +55,8 @@ public class DBLPWelcome extends JFrame {
 		// gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridx = 1;
 		gbc.gridy = 3;
-		// gbc.insets = new Insets(3, 3, 3, 3);
+		gbc.weighty = 0;
+		gbc.insets = new Insets(3, 3, 3, 3);
 		panel.add(exitButton, gbc);
 
 		add(panel);
@@ -59,12 +64,18 @@ public class DBLPWelcome extends JFrame {
 		this.setVisible(true);
 	}
 
+	/**
+ 	*  An inner private class for closing the window.
+ 	*/
 	private class CloseListener implements ActionListener {
 		public void actionPerformed (ActionEvent e) {
 			System.exit(0);
 		}
 	}
 
+	/**
+ 	*  An inner private class for opening SwingLayoutDemo class object.
+ 	*/
 	private class OpenEngine implements ActionListener {
 		public void actionPerformed (ActionEvent e) {
 			setVisible(false);
@@ -72,7 +83,12 @@ public class DBLPWelcome extends JFrame {
 		}
 	}
 
+	///This is the driver method to start the engine.
 	public static void main(String[] args) {
-		new DBLPWelcome();
+		SwingUtilities.invokeLater(new Runnable() { 
+			public void run() {
+				new DBLPWelcome();
+			}
+		});
 	}
 }

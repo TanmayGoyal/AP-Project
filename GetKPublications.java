@@ -3,6 +3,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import java.util.*;
 
+/**
+ *  The GetKPublications class.
+ */
 public class GetKPublications extends DefaultHandler{
 	boolean bAuthor = false;
 	boolean bIgnore = false;

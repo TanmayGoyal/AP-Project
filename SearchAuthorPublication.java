@@ -3,6 +3,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import java.util.*;
 
+/**
+ *  The SearchAuthorPublication class.
+ */
 public class SearchAuthorPublication extends DefaultHandler {
 	boolean bAuthor = false;
 	boolean bTitle = false;

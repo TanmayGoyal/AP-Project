@@ -3,6 +3,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import java.util.*;
 
+/**
+ *  The GetAllAuthors class.
+ */
 public class GetAllAuthors extends DefaultHandler {
 	boolean bAuthor = false;
 	// boolean bTitle = false;

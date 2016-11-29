@@ -3,6 +3,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import java.util.*;
 
+/**
+ *  The SearchTitlePublications class.
+ */
 public class SearchTitlePublications extends DefaultHandler{
 	String recTitle;
 
@@ -55,7 +58,7 @@ public class SearchTitlePublications extends DefaultHandler{
 
 		bSince = false;
 	}
-	
+
 	///This is an overridden method from DefaultHandler which reads the starting tag of an element in the XML file.
 	@Override
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {

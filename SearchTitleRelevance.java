@@ -3,6 +3,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import java.util.*;
 
+/**
+ *  The SearchTitleRelevance class.
+ */
 public class SearchTitleRelevance extends DefaultHandler {
 	String recTitle;
 

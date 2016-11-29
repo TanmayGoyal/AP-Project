@@ -9,6 +9,9 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
 import java.util.*;
 
+/**
+ *  The SwingLayoutDemo class.
+ */
 public class SwingLayoutDemo {
    private JFrame mainFrame;
    private JLabel headerLabel;

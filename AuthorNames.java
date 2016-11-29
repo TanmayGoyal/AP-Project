@@ -1,5 +1,8 @@
 import java.util.*;
 
+/**
+ *  The AuthorNames class.
+ */
 public class AuthorNames {
 	ArrayList<String> alias = new ArrayList<String>();
 

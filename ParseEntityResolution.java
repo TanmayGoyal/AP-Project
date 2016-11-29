@@ -3,6 +3,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 import java.util.*;
 
+/**
+ *  The ParseEntityResolution class.
+ */
 public class ParseEntityResolution extends DefaultHandler{
 	ArrayList<AuthorNames> authors = new ArrayList<AuthorNames>();
 	boolean bwww = false;
