@@ -1,3 +1,28 @@
+/*! \mainpage The Project Home Page
+ *
+ * \section intro_sec Introduction
+ *
+ * This is our project page for the DBLP Query Engine.
+ * DBLP is a computer science bibliography website. Starting 
+ * in 1993 at the University of Trier, Germany, it grew from a 
+ * small collection of HTML files and became an organization 
+ * hosting a database and logic programming bibliography site. 
+ * DBLP listed more than 3.4 million journal articles, conference 
+ * papers, and other publications on computer science in July 2016, 
+ * up from about 14,000 in 1995.
+ * 
+ * We designed a parsing mechanism to read the huge dataset and 
+ * display different outputs based on the user's query inputs.
+ * We have to tried incorporate design patterns in our project.
+ *
+ * \author     Tanmay Goyal
+ * \author     Subramanyam Dantu
+ * \date       30-11-2016
+ * \copyright  MIT License
+ * 
+ *
+ */
+
 import java.util.*;
 import javax.swing.*;
 import java.awt.*;

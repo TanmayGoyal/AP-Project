@@ -33,6 +33,8 @@ public class SwingLayoutDemo {
    private JPanel tablePanel;
    private JButton reset1Button;
    private JButton reset2Button;
+   private JLabel result1Label;
+   private JLabel result2Label;
 
    private InputSource is;
    private SAXParser saxParser;
@@ -46,7 +48,7 @@ public class SwingLayoutDemo {
 
    GetKPublications kPublications;// = new GetKPublications(hashMap,k);
 
-   private String fileName = "input1.xml";
+   private String fileName = "dblp.xml";
 
    /**
    * This is the constructor for the initial parsing and the GUI interface.
@@ -216,6 +218,7 @@ public class SwingLayoutDemo {
       JPanel query15Panel = new JPanel(new FlowLayout());
       JPanel query16Panel = new JPanel(new FlowLayout());
       JPanel query17Panel = new JPanel(new FlowLayout());
+      JPanel query18Panel = new JPanel(new FlowLayout());
 
       final DefaultComboBoxModel<String> searchBy = new DefaultComboBoxModel<String>();
 
@@ -278,7 +281,10 @@ public class SwingLayoutDemo {
             // }
             if (searchType.equals("By Author Name")) {
 
-               if (yearSortButton.isSelected()) {
+               if (nameField.getText().equals(""))
+                     JOptionPane.showMessageDialog(null, "Please enter an author name.", "Warning", JOptionPane.WARNING_MESSAGE);
+
+               else if (yearSortButton.isSelected()) {
                   if (!(sinceYearField.getText().equals("")) && customStartRangeField.getText().equals("") && customEndRangeField.getText().equals("")) {
                      getAuthorYearSorted(nameField.getText(), sinceYearField.getText());
                   }
@@ -316,6 +322,9 @@ public class SwingLayoutDemo {
                }
             }
             else if (searchType.equals("By Title Tag")) {
+               if (nameField.getText().equals(""))
+                     JOptionPane.showMessageDialog(null, "Please enter a title.", "Warning", JOptionPane.WARNING_MESSAGE);
+
                if (yearSortButton.isSelected()) {
                   if (!(sinceYearField.getText().equals("")) && customStartRangeField.getText().equals("") && customEndRangeField.getText().equals("")) {
                      getTitleYearSorted(nameField.getText(), sinceYearField.getText());
@@ -348,12 +357,9 @@ public class SwingLayoutDemo {
                   }
                }
             }
-
             else {
                JOptionPane.showMessageDialog(null, "Please select a query.", "Warning", JOptionPane.WARNING_MESSAGE);
-
             }
-
          }
       });
       query15Panel.add(search1Button);
@@ -379,7 +385,10 @@ public class SwingLayoutDemo {
             System.exit(0);
          }
       });
-      query17Panel.add(exit1Button);
+      query17Panel.add(exit1Button);//Row 7
+
+      result1Label = new JLabel("Count : _______");
+      query18Panel.add(result1Label);
 
       query1Panel.add(query11Panel);
       query1Panel.add(query12Panel);
@@ -387,6 +396,7 @@ public class SwingLayoutDemo {
       query1Panel.add(query14Panel);
       query1Panel.add(query16Panel);
       query1Panel.add(query15Panel);
+      query1Panel.add(query18Panel);
       query1Panel.add(query17Panel);//end query1 panels.
    }
    /**< It creates a combo box for the search by Author
@@ -401,6 +411,7 @@ public class SwingLayoutDemo {
       JPanel query21Panel = new JPanel(new FlowLayout());
       JPanel query22Panel = new JPanel(new FlowLayout());
       JPanel query23Panel = new JPanel(new FlowLayout());
+      JPanel query24Panel = new JPanel(new FlowLayout());
 
       JLabel publicationsLabel = new JLabel("No. of Publications:");
       query21Panel.add(publicationsLabel);
@@ -444,7 +455,6 @@ public class SwingLayoutDemo {
                JOptionPane.showMessageDialog(null, "Please enter a valid number.", "Warning", JOptionPane.WARNING_MESSAGE);
             }
          }
-
       });
       query22Panel.add(search2Button);
 
@@ -465,10 +475,15 @@ public class SwingLayoutDemo {
             System.exit(0);
          }
       });
-      query23Panel.add(exit2Button);
+      query23Panel.add(exit2Button);//Row 3
+
+      result2Label = new JLabel("Count : _______");
+
+      query24Panel.add(result2Label);
 
       query2Panel.add(query21Panel);
       query2Panel.add(query22Panel);
+      query2Panel.add(query24Panel);
       query2Panel.add(query23Panel);//end query2 panels.
    }
    /**< It creates a field for receiving the number of 
@@ -636,6 +651,14 @@ public class SwingLayoutDemo {
    ///This method creates a new Table which matches the output of Query 2.
    private void getQ2Table() {
         String[] colNames = new String[] {"SNo","Author", "Number of Publications"};
+
+        int i = 0;
+
+        for (String[] x : map) {
+         i++;
+        }
+
+        result2Label.setText("Count : " + Integer.toString(i));
         DefaultTableModel dtm = new DefaultTableModel(map, colNames);
         table.setModel(dtm);
    }
@@ -663,6 +686,8 @@ public class SwingLayoutDemo {
             i++;
          }
 
+         result1Label.setText("Count : " + Integer.toString(i-1));
+
          String[] colNames = new String[] {"SNo", "Authors", "Title", "Pages", "Year", "Volume", "Journal", "url"};
          DefaultTableModel dtm = new DefaultTableModel(arr, colNames);
          table.setModel(dtm);
@@ -676,6 +701,15 @@ public class SwingLayoutDemo {
         String[] colNames = new String[] {"SNo", "Authors", "Title", "Pages", "Year", "Volume", "Journal", "url", "Relevance"};
         DefaultTableModel dtm = new DefaultTableModel(arr, colNames);
         table.setModel(dtm);
+
+        int i = 1;
+
+        for (String[] x : arr) {
+         x[0] = Integer.toString(i);
+         i++;
+        }
+
+        result1Label.setText("Count : " + Integer.toString(i-1));
    }
 
    ///This method creates a new Table on startup.
@@ -723,14 +757,14 @@ public class SwingLayoutDemo {
          kPublications = new GetKPublications(hashMap,k,authorEntities);
          // q2Count = kPublications.getCount();
 
-         System.out.println("second");
+         System.out.println("Parsing for publications.... :)");
          kPublications = parseAgain(kPublications);
 
          map = kPublications.getAuthors(k);
 
          
 
-         System.out.println("done");
+         // System.out.println("");
       }
       catch (Exception e) {
          e.printStackTrace();
