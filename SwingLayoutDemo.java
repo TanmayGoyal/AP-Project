@@ -325,7 +325,7 @@ public class SwingLayoutDemo {
                if (nameField.getText().equals(""))
                      JOptionPane.showMessageDialog(null, "Please enter a title.", "Warning", JOptionPane.WARNING_MESSAGE);
 
-               if (yearSortButton.isSelected()) {
+               else if (yearSortButton.isSelected()) {
                   if (!(sinceYearField.getText().equals("")) && customStartRangeField.getText().equals("") && customEndRangeField.getText().equals("")) {
                      getTitleYearSorted(nameField.getText(), sinceYearField.getText());
                   }
@@ -350,7 +350,7 @@ public class SwingLayoutDemo {
                      getTitleYearRelevance(nameField.getText(), customStartRangeField.getText(), customEndRangeField.getText());
                   }
                   else if (sinceYearField.getText().equals("") && customStartRangeField.getText().equals("") && customEndRangeField.getText().equals("")) {
-                     getTitleYearSorted(nameField.getText(), "1700");
+                     getTitleYearRelevance(nameField.getText(), "1700");
                   }
                   else {
                      JOptionPane.showMessageDialog(null, "Please enter a valid format.", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -699,8 +699,7 @@ public class SwingLayoutDemo {
 
       // System.out.println(arr[0][8]);
         String[] colNames = new String[] {"SNo", "Authors", "Title", "Pages", "Year", "Volume", "Journal", "url", "Relevance"};
-        DefaultTableModel dtm = new DefaultTableModel(arr, colNames);
-        table.setModel(dtm);
+        
 
         int i = 1;
 
@@ -708,6 +707,9 @@ public class SwingLayoutDemo {
          x[0] = Integer.toString(i);
          i++;
         }
+
+        DefaultTableModel dtm = new DefaultTableModel(arr, colNames);
+        table.setModel(dtm);
 
         result1Label.setText("Count : " + Integer.toString(i-1));
    }
